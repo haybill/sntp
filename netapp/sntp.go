@@ -6,11 +6,13 @@
 package netapp
 
 import (
+	"fmt"
 	"github.com/btfak/sntp/netevent"
 	"github.com/btfak/sntp/sntp"
 	"net"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var handler *Handler
@@ -33,6 +35,9 @@ func (p *Handler) DatagramReceived(data []byte, addr net.Addr) {
 	if err == nil {
 		ip, port := spliteAddr(addr.String())
 		p.UdpWrite(string(res), ip, port)
+		fmt.Printf("%s: NTP server responded to incoming request from: %s\n", time.Now().Format("2006-01-02 15:04:05.000000000"), addr.String())
+	} else {
+		fmt.Printf("%s: NTP server generated an error (%v) while responding to: %s\n", time.Now().Format("2006-01-02 15:04:05.000000000"), err, addr.String())
 	}
 }
 
